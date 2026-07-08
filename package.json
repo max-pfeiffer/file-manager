@@ -1,0 +1,70 @@
+{
+  "name": "file-manager",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@11.6.0",
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "dev": "concurrently -n server,web -c blue,green \"pnpm run dev:server\" \"pnpm run dev:web\"",
+    "dev:web": "vite",
+    "dev:server": "PORT=3000 tsx watch server/src/main.ts",
+    "build": "pnpm run build:web && pnpm run build:server",
+    "build:web": "vite build",
+    "build:server": "tsc -p server/tsconfig.json",
+    "start": "node dist/server/main.js",
+    "lint": "eslint --fix .",
+    "format": "prettier --write .",
+    "typecheck": "vue-tsc --noEmit -p tsconfig.app.json && tsc --noEmit -p server/tsconfig.json",
+    "test:unit": "vitest run",
+    "test:e2e": "playwright test",
+    "prepare": "husky"
+  },
+  "lint-staged": {
+    "{src,server,e2e}/**/*.{vue,ts}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{js,css,json,md}": [
+      "prettier --write"
+    ]
+  },
+  "dependencies": {
+    "@fastify/static": "^8.0.0",
+    "fastify": "^5.0.0",
+    "fflate": "^0.8.0",
+    "jose": "^6.0.0",
+    "keycloak-js": "^26.0.0",
+    "ofetch": "^1.0.0",
+    "pinia": "^3.0.0",
+    "vue": "^3.5.0",
+    "vue-router": "^4.5.0",
+    "vuefinder": "^4.0.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.50.0",
+    "@tailwindcss/vite": "^4.0.0",
+    "@tsconfig/node24": "^24.0.0",
+    "@types/node": "^24.0.0",
+    "@vitejs/plugin-vue": "^6.0.0",
+    "@vue/eslint-config-prettier": "^10.0.0",
+    "@vue/eslint-config-typescript": "^14.0.0",
+    "@vue/test-utils": "^2.4.0",
+    "@vue/tsconfig": "^0.7.0",
+    "concurrently": "^9.0.0",
+    "eslint": "^9.0.0",
+    "eslint-plugin-vue": "^10.0.0",
+    "husky": "^9.0.0",
+    "jsdom": "^26.0.0",
+    "lint-staged": "^16.0.0",
+    "prettier": "^3.0.0",
+    "tailwindcss": "^4.0.0",
+    "tsx": "^4.0.0",
+    "typescript": "^5.8.0",
+    "vite": "^7.0.0",
+    "vitest": "^3.0.0",
+    "vue-tsc": "^3.0.0"
+  }
+}
