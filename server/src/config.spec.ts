@@ -83,7 +83,20 @@ describe("loadConfig", () => {
         url: "http://keycloak:8080",
         realm: "file-manager",
         clientId: "file-manager",
+        internalUrl: "http://keycloak:8080",
       });
+    });
+
+    it("supports a separate internal URL for JWKS fetching", () => {
+      const config = loadConfig({
+        AUTH_METHOD: "keycloak",
+        KEYCLOAK_URL: "http://localhost:8081",
+        KEYCLOAK_INTERNAL_URL: "http://keycloak:8080",
+        KEYCLOAK_REALM: "file-manager",
+        KEYCLOAK_CLIENT_ID: "file-manager",
+      });
+      expect(config.keycloak?.url).toBe("http://localhost:8081");
+      expect(config.keycloak?.internalUrl).toBe("http://keycloak:8080");
     });
   });
 });

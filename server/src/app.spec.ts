@@ -51,6 +51,7 @@ describe("GET /api/config", () => {
         url: "http://keycloak:8080",
         realm: "file-manager",
         clientId: "file-manager",
+        internalUrl: "http://keycloak-internal:8080",
       },
     });
     const response = await app.inject({ method: "GET", url: "/api/config" });

@@ -1,0 +1,51 @@
+# Local manual testing: file-manager with a Keycloak identity provider.
+#
+#   podman compose up --build
+#
+# App:      http://localhost:8080  (login: test / test)
+# Keycloak: http://localhost:8081  (admin: admin / admin)
+services:
+  keycloak:
+    image: quay.io/keycloak/keycloak:26.4
+    command: ["start-dev", "--import-realm"]
+    environment:
+      KC_BOOTSTRAP_ADMIN_USERNAME: admin
+      KC_BOOTSTRAP_ADMIN_PASSWORD: admin
+      KC_HEALTH_ENABLED: "true"
+    ports:
+      - "8081:8080"
+    volumes:
+      - ./compose/keycloak:/opt/keycloak/data/import:ro
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "exec 3<>/dev/tcp/127.0.0.1/9000 && echo -e 'GET /health/ready HTTP/1.1\\r\\nHost: localhost\\r\\nConnection: close\\r\\n\\r\\n' >&3 && grep -q '200 OK' <&3",
+        ]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+
+  file-manager:
+    build:
+      context: .
+      dockerfile: Containerfile
+    ports:
+      - "8080:8080"
+    environment:
+      AUTH_METHOD: keycloak
+      # URL the browser uses (token issuer) vs. the compose-internal URL
+      # the backend uses to fetch the realm JWKS.
+      KEYCLOAK_URL: http://localhost:8081
+      KEYCLOAK_INTERNAL_URL: http://keycloak:8080
+      KEYCLOAK_REALM: file-manager
+      KEYCLOAK_CLIENT_ID: file-manager
+      FILES_ROOT: /data
+    volumes:
+      - files-data:/data
+    depends_on:
+      keycloak:
+        condition: service_healthy
+
+volumes:
+  files-data:

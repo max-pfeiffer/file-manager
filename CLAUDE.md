@@ -81,6 +81,7 @@ The frontend cannot access the container filesystem directly, so a small backend
 ### Authentication
 
 Authentication is selected with the `AUTH_METHOD` environment variable (`basic` | `keycloak` | `none`, default `none`):
+
 1. `basic` — HTTP Basic Auth: username and password configurable using environment variables
 2. `keycloak` — OAuth2/OIDC with Keycloak: configurable using environment variables
 3. `none` — no authentication (default)
@@ -88,11 +89,13 @@ Authentication is selected with the `AUTH_METHOD` environment variable (`basic` 
 The frontend learns the active auth method and Keycloak settings at runtime from `GET /api/config`.
 
 #### HTTP Basic Auth
+
 - Enforced by a Fastify hook on all `/api/*` routes using a timing-safe comparison
 - Credentials come from `AUTH_USERNAME` / `AUTH_PASSWORD`, injected from a Kubernetes Secret
 - Frontend UX: the app shows its own login form (no browser-native auth prompt); credentials are kept in memory only (Pinia auth store, never localStorage) and attached as an `Authorization: Basic …` header by the shared `ofetch` client and VueFinder's request config
 
 #### OAuth2/OIDC with Keycloak
+
 - Flow: Authorization Code flow with PKCE
 - Keycloak token refresh: handle silent token refresh automatically
 - Keycloak init timing: initialize Keycloak and await authentication before mounting the Vue app
@@ -118,14 +121,16 @@ The frontend learns the active auth method and Keycloak settings at runtime from
 #### E2E tests
 
 Coverage:
+
 - e2e test login flow setup: mock/stub the auth layer in tests
 
 #### Local manual testing
 
-- Podman compose is used for local manual testing
-- Configuration: compose.yaml (starts Keycloak, starts the file-manager app)
+- Podman compose is used for local manual testing: `podman compose up --build`
+- Configuration: compose.yaml (starts Keycloak on :8081, starts the file-manager app on :8080)
 - Keycloak is preloaded from `compose/keycloak/realm.json` with realm `file-manager`, client `file-manager`
 - The realm import includes a test user: username `test`, password `test` (local testing only)
+- The Keycloak admin console is at http://localhost:8081 (admin / admin)
 
 ## Stack
 
@@ -178,7 +183,8 @@ All variables are runtime configuration read by the backend; the frontend receiv
 - AUTH_METHOD — active authentication method: `basic` | `keycloak` | `none` (default: `none`)
 - AUTH_USERNAME — HTTP Basic Auth username (required when AUTH_METHOD=basic)
 - AUTH_PASSWORD — HTTP Basic Auth password (required when AUTH_METHOD=basic)
-- KEYCLOAK_URL — Keycloak server URL (required when AUTH_METHOD=keycloak)
+- KEYCLOAK_URL — Keycloak URL as reached by the browser; determines the token issuer (required when AUTH_METHOD=keycloak)
+- KEYCLOAK_INTERNAL_URL — Keycloak URL the backend uses to fetch the realm JWKS; defaults to KEYCLOAK_URL (set it when Keycloak is only reachable internally under a different hostname, e.g. compose network or in-cluster service)
 - KEYCLOAK_REALM — Keycloak realm name (required when AUTH_METHOD=keycloak)
 - KEYCLOAK_CLIENT_ID — Keycloak client ID (required when AUTH_METHOD=keycloak)
 

@@ -49,9 +49,10 @@ export function createKeycloakAuthHook(
   getKey?: JWTVerifyGetKey,
 ): AuthHook {
   const issuer = keycloakIssuer(keycloak);
+  const jwksBase = `${keycloak.internalUrl.replace(/\/+$/, "")}/realms/${keycloak.realm}`;
   const keySource =
     getKey ??
-    createRemoteJWKSet(new URL(`${issuer}/protocol/openid-connect/certs`));
+    createRemoteJWKSet(new URL(`${jwksBase}/protocol/openid-connect/certs`));
   return async (request, reply) => {
     const header = request.headers.authorization ?? "";
     if (!header.startsWith("Bearer ")) {
