@@ -1,0 +1,5 @@
+# This file exists only for the native-build allowlist (pnpm 11+).
+# The project is a single package, not a monorepo.
+allowBuilds:
+  esbuild: true
+  vue-demi: true
