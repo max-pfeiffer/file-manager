@@ -10,7 +10,7 @@
   "scripts": {
     "dev": "concurrently -n server,web -c blue,green \"pnpm run dev:server\" \"pnpm run dev:web\"",
     "dev:web": "vite",
-    "dev:server": "PORT=3000 tsx watch server/src/main.ts",
+    "dev:server": "PORT=3000 FILES_ROOT=.dev-data tsx watch server/src/main.ts",
     "build": "pnpm run build:web && pnpm run build:server",
     "build:web": "vite build",
     "build:server": "tsc -p server/tsconfig.json",
@@ -32,6 +32,7 @@
     ]
   },
   "dependencies": {
+    "@fastify/multipart": "^9.0.0",
     "@fastify/static": "^8.0.0",
     "fastify": "^5.0.0",
     "fflate": "^0.8.0",

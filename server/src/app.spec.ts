@@ -2,17 +2,29 @@ import { mkdtemp, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 
-import { afterEach, describe, expect, it } from "vitest";
+import { afterAll, afterEach, beforeAll, describe, expect, it } from "vitest";
 
 import { buildApp } from "./app.js";
 import type { AppConfig } from "./config.js";
 
-const baseConfig: AppConfig = {
-  port: 8080,
-  host: "0.0.0.0",
-  filesRoot: "/data",
-  authMethod: "none",
-};
+// The files routes create a sandbox for filesRoot on registration, so
+// tests need a root that actually exists and is writable.
+let filesRoot: string;
+let baseConfig: AppConfig;
+
+beforeAll(async () => {
+  filesRoot = await mkdtemp(path.join(tmpdir(), "app-spec-root-"));
+  baseConfig = {
+    port: 8080,
+    host: "0.0.0.0",
+    filesRoot,
+    authMethod: "none",
+  };
+});
+
+afterAll(async () => {
+  await rm(filesRoot, { recursive: true, force: true });
+});
 
 describe("GET /healthz", () => {
   it("returns 200 ok", async () => {
