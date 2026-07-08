@@ -38,6 +38,7 @@ const keycloakSettings = {
   url: "http://keycloak:8080",
   realm: "file-manager",
   clientId: "file-manager",
+  internalUrl: "http://keycloak:8080",
 };
 
 const keycloakConfig = (): AppConfig => ({
@@ -184,9 +185,14 @@ describe("keycloak auth", () => {
     app = buildApp(keycloakConfig(), { jwtKeySource: getKey });
     const response = await app.inject({ method: "GET", url: "/api/config" });
     expect(response.statusCode).toBe(200);
+    // internalUrl is backend-only and must not leak to the frontend.
     expect(response.json()).toEqual({
       authMethod: "keycloak",
-      keycloak: keycloakSettings,
+      keycloak: {
+        url: keycloakSettings.url,
+        realm: keycloakSettings.realm,
+        clientId: keycloakSettings.clientId,
+      },
     });
   });
 });

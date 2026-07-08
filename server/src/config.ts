@@ -8,9 +8,16 @@ export interface BasicAuthConfig {
 }
 
 export interface KeycloakConfig {
+  /** URL the browser uses to reach Keycloak; determines the token issuer. */
   url: string;
   realm: string;
   clientId: string;
+  /**
+   * URL the backend uses to fetch the realm JWKS. Defaults to `url`;
+   * needed when Keycloak is only reachable internally under a different
+   * hostname (compose network, in-cluster service).
+   */
+  internalUrl: string;
 }
 
 export interface AppConfig {
@@ -67,10 +74,12 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): AppConfig {
   }
 
   if (authMethod === "keycloak") {
+    const url = required(env, "KEYCLOAK_URL", "AUTH_METHOD=keycloak");
     config.keycloak = {
-      url: required(env, "KEYCLOAK_URL", "AUTH_METHOD=keycloak"),
+      url,
       realm: required(env, "KEYCLOAK_REALM", "AUTH_METHOD=keycloak"),
       clientId: required(env, "KEYCLOAK_CLIENT_ID", "AUTH_METHOD=keycloak"),
+      internalUrl: env.KEYCLOAK_INTERNAL_URL || url,
     };
   }
 

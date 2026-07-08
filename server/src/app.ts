@@ -37,7 +37,15 @@ export function buildApp(
   // must never be exposed here.
   app.get("/api/config", async () => ({
     authMethod: config.authMethod,
-    ...(config.keycloak ? { keycloak: config.keycloak } : {}),
+    ...(config.keycloak
+      ? {
+          keycloak: {
+            url: config.keycloak.url,
+            realm: config.keycloak.realm,
+            clientId: config.keycloak.clientId,
+          },
+        }
+      : {}),
   }));
 
   // The file API is guarded by the configured auth method; /healthz and
