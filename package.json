@@ -10,7 +10,7 @@
   "scripts": {
     "dev": "concurrently -n server,web -c blue,green \"pnpm run dev:server\" \"pnpm run dev:web\"",
     "dev:web": "vite",
-    "dev:server": "PORT=3000 FILES_ROOT=.dev-data tsx watch server/src/main.ts",
+    "dev:server": "PORT=3000 FILES_ROOT=${FILES_ROOT:-.dev-data} tsx watch server/src/main.ts",
     "build": "pnpm run build:web && pnpm run build:server",
     "build:web": "vite build",
     "build:server": "tsc -p server/tsconfig.json",
