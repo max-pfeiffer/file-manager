@@ -1,15 +1,26 @@
-// Minimal server stub for Phase 0 scaffolding; the real backend
-// (config parsing, /api/config, static serving) lands in Phase 1.
-import Fastify from "fastify";
+import { fileURLToPath } from "node:url";
 
-const port = Number(process.env.PORT ?? 8080);
-const host = process.env.HOST ?? "0.0.0.0";
+import { buildApp } from "./app.js";
+import { ConfigError, loadConfig } from "./config.js";
 
-const app = Fastify({ logger: true });
+let config;
+try {
+  config = loadConfig();
+} catch (err) {
+  if (err instanceof ConfigError) {
+    console.error(`Configuration error: ${err.message}`);
+    process.exit(1);
+  }
+  throw err;
+}
 
-app.get("/healthz", async () => ({ status: "ok" }));
+// Resolves to dist/web next to the built server (dist/server); in
+// development this path does not exist and Vite serves the SPA instead.
+const webRoot = fileURLToPath(new URL("../web", import.meta.url));
 
-app.listen({ port, host }).catch((err) => {
+const app = buildApp(config, { logger: true, webRoot });
+
+app.listen({ port: config.port, host: config.host }).catch((err) => {
   app.log.error(err);
   process.exit(1);
 });
