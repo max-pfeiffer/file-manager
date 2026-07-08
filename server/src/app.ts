@@ -4,6 +4,7 @@ import fastifyStatic from "@fastify/static";
 import Fastify, { type FastifyInstance } from "fastify";
 
 import type { AppConfig } from "./config.js";
+import { filesRoutes } from "./routes/files.js";
 
 export interface BuildAppOptions {
   logger?: boolean;
@@ -18,7 +19,12 @@ export function buildApp(
   config: AppConfig,
   opts: BuildAppOptions = {},
 ): FastifyInstance {
-  const app = Fastify({ logger: opts.logger ?? false });
+  // bodyLimit covers JSON saves of edited text files; uploads stream
+  // through multipart and are limited separately in the files routes.
+  const app = Fastify({
+    logger: opts.logger ?? false,
+    bodyLimit: 32 * 1024 * 1024,
+  });
 
   app.get("/healthz", async () => ({ status: "ok" }));
 
@@ -28,6 +34,8 @@ export function buildApp(
     authMethod: config.authMethod,
     ...(config.keycloak ? { keycloak: config.keycloak } : {}),
   }));
+
+  app.register(filesRoutes, { prefix: "/api", filesRoot: config.filesRoot });
 
   if (opts.webRoot && existsSync(opts.webRoot)) {
     app.register(fastifyStatic, { root: opts.webRoot });
