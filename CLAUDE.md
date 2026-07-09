@@ -43,11 +43,11 @@ No Kubernetes manifests are included in this project.
 
 - For git commit messages conventional commits specification is used: https://www.conventionalcommits.org/en/v1.0.0/#specification
 - Local pre-commit hooks managed with Husky + lint-staged run on every commit.
-- GitHub Actions CI checks (linting, unit tests) run on every pull request: `.github/workflows/ci.yaml`
-- A new release on GitHub is created when the main branch is tagged with a semantic version
-- Release notes are generated automatically
-- When a new release is created by tagging the main branch, the container image is built and pushed to Docker Hub: `.github/workflows/release.yaml`
-- The image is then tagged with the release tag version and also with latest tag
+- GitHub Actions CI checks (linting, format check, type checking, unit tests) run on every pull request: `.github/workflows/ci.yaml`
+- Releases are managed by release-please (`.github/workflows/release.yaml`): merging Conventional Commit history to `main` opens/updates a release PR; merging that PR tags `main` with a semantic version and generates the release notes automatically
+- When the version tag is pushed, the container image is built and pushed to Docker Hub: `.github/workflows/container-image.yaml`
+- The image is a multi-arch manifest tagged with the release version and also with the `latest` tag
+- The README is published to Docker Hub as the repository overview on changes to `main`: `.github/workflows/dockerhub-description.yaml`
 - In GitHub Actions environment variable DOCKER_HUB_USERNAME is used as Docker Hub username
 - In GitHub Actions environment variable DOCKER_HUB_TOKEN is used as Docker Hub password
 
@@ -61,6 +61,7 @@ Single package — frontend and backend share one `package.json` and one toolcha
 - `server/` — Fastify backend (TypeScript sources)
 - `e2e/` — Playwright E2E tests
 - `compose/` — assets for local manual testing (Keycloak realm import)
+- `docs/` — README assets (e.g. `screenshot.png`)
 - `.github/workflows/` — CI and release workflows
 - `dist/` — build output: `dist/web/` (SPA, built by Vite) and `dist/server/` (backend, built by `tsc`); not committed
 
@@ -120,9 +121,14 @@ The frontend learns the active auth method and Keycloak settings at runtime from
 
 #### E2E tests
 
-Coverage:
+The suite runs against the backend with `AUTH_METHOD=none` and seeds files
+through the API. Coverage (`e2e/file-manager.spec.ts`):
 
-- e2e test login flow setup: mock/stub the auth layer in tests
+- File CRUD flows: listing, create file/folder, rename, delete, folder
+  navigation, and text preview
+- Basic Auth login flow: the auth layer is stubbed at the network edge —
+  `GET /api/config` is mocked to advertise `basic`, driving the frontend login
+  redirect, sign-in and redirect to the file manager without a real Keycloak
 
 #### Local manual testing
 

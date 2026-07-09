@@ -110,3 +110,32 @@ test.describe("file manager", () => {
     await expect(page.getByText("unique preview content")).toBeVisible();
   });
 });
+
+/**
+ * The E2E backend runs with AUTH_METHOD=none, so the auth layer is stubbed
+ * at the edge: GET /api/config is mocked to advertise Basic Auth. That drives
+ * the frontend login flow (redirect → form → sign in → app) while the backend
+ * still serves the file API unauthenticated once credentials are attached.
+ */
+test.describe("basic-auth login flow", () => {
+  test.beforeEach(async ({ page }) => {
+    await page.route("**/api/config", (route) =>
+      route.fulfill({ json: { authMethod: "basic" } }),
+    );
+  });
+
+  test("redirects to the login form when unauthenticated", async ({ page }) => {
+    await page.goto("/");
+    await expect(page).toHaveURL(/\/login$/);
+    await expect(page.locator('input[name="username"]')).toBeVisible();
+  });
+
+  test("signs in and reaches the file manager", async ({ page }) => {
+    await page.goto("/");
+    await page.locator('input[name="username"]').fill("test");
+    await page.locator('input[name="password"]').fill("test");
+    await page.getByRole("button", { name: "Sign in" }).click();
+    await expect(page).toHaveURL(/\/$/);
+    await expect(page.locator(".vuefinder__explorer__container")).toBeVisible();
+  });
+});
