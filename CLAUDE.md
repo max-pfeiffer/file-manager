@@ -168,7 +168,9 @@ Coverage:
 - `pnpm build` — build the SPA (Vite → `dist/web/`) and the backend (tsc → `dist/server/`)
 - `pnpm start` — run the built server; serves SPA and API on `PORT` (production entrypoint)
 - `pnpm lint` — ESLint (with `--fix`)
+- `pnpm lint:check` — ESLint without fixing (used by CI)
 - `pnpm format` — Prettier write
+- `pnpm format:check` — Prettier check without writing (used by CI)
 - `pnpm typecheck` — `vue-tsc --noEmit` (frontend) and `tsc --noEmit` (backend)
 - `pnpm test:unit` — Vitest
 - `pnpm test:e2e` — Playwright
