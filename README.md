@@ -1,4 +1,4 @@
-# file-manager
+# File Manager
 
 A self-hosted web frontend for managing files on disk. Browse, create, edit,
 upload, download, rename, move, delete, and work with zip archives — all from
