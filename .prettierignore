@@ -3,3 +3,6 @@ coverage/
 playwright-report/
 test-results/
 pnpm-lock.yaml
+
+# Generated and owned by release-please; not Prettier-formatted.
+CHANGELOG.md
