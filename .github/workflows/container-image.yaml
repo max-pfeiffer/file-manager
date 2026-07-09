@@ -1,0 +1,48 @@
+name: Container Image
+
+# Publishes the multi-architecture image when main is tagged with a semantic
+# version. release-please creates these tags via a GitHub App token, so the tag
+# push triggers this workflow (default GITHUB_TOKEN pushes would not).
+on:
+  push:
+    tags:
+      - "[0-9]+.[0-9]+.[0-9]+"
+
+jobs:
+  container-image:
+    name: Build and push container image
+    runs-on: ubuntu-24.04
+
+    env:
+      IMAGE: docker.io/${{ secrets.DOCKER_HUB_USERNAME }}/file-manager
+      VERSION: ${{ github.ref_name }}
+
+    steps:
+      - uses: actions/checkout@v6
+
+      # Register QEMU binfmt handlers so Podman can build the arm64 image
+      # on the amd64 runner via emulation.
+      - name: Set up QEMU for cross-architecture builds
+        uses: docker/setup-qemu-action@v4
+        with:
+          platforms: arm64
+
+      - name: Log in to Docker Hub
+        run: |
+          echo "${{ secrets.DOCKER_HUB_TOKEN }}" \
+            | podman login docker.io \
+                -u "${{ secrets.DOCKER_HUB_USERNAME }}" \
+                --password-stdin
+
+      - name: Build multi-architecture image
+        run: |
+          podman build \
+            --platform linux/amd64,linux/arm64 \
+            --manifest "${IMAGE}:${VERSION}" \
+            -f Containerfile \
+            .
+
+      - name: Push image manifest (version + latest)
+        run: |
+          podman manifest push --all "${IMAGE}:${VERSION}" "docker://${IMAGE}:${VERSION}"
+          podman manifest push --all "${IMAGE}:${VERSION}" "docker://${IMAGE}:latest"
