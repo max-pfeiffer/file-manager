@@ -11,7 +11,8 @@
 [![Playwright](https://img.shields.io/badge/Playwright-2EAD33?logo=playwright&logoColor=white)](https://playwright.dev/)
 [![pnpm](https://img.shields.io/badge/pnpm-F69220?logo=pnpm&logoColor=white)](https://pnpm.io/)
 [![Keycloak](https://img.shields.io/badge/Keycloak-4D4D4D?logo=keycloak&logoColor=white)](https://www.keycloak.org/)
-[![Docker Hub](https://img.shields.io/badge/Docker_Hub-pfeiffermax%2Ffile--manager-2496ED?logo=docker&logoColor=white)](https://hub.docker.com/r/pfeiffermax/file-manager)
+[![Docker Image Size](https://img.shields.io/docker/image-size/pfeiffermax/file-manager/latest?logo=docker&logoColor=white&label=image%20size)](https://hub.docker.com/r/pfeiffermax/file-manager)
+[![Docker Pulls](https://img.shields.io/docker/pulls/pfeiffermax/file-manager?logo=docker&logoColor=white&label=pulls)](https://hub.docker.com/r/pfeiffermax/file-manager)
 
 A self-hosted web frontend for managing files on disk. Browse, create, edit,
 upload, download, rename, move, delete, and work with zip archives — all from
