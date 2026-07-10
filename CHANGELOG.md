@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.0.1](https://github.com/max-pfeiffer/file-manager/compare/1.0.0...1.0.1) (2026-07-10)
+
+
+### Documentation
+
+* improved readme and added badges ([c3fb524](https://github.com/max-pfeiffer/file-manager/commit/c3fb524f58e3e4ea964076328261af8780338b89))
+* improved readme and added badges ([2c9b77c](https://github.com/max-pfeiffer/file-manager/commit/2c9b77c4949df6154752bd69a6337d5fcdf175db))
+* improved readme and added badges ([9bfb499](https://github.com/max-pfeiffer/file-manager/commit/9bfb499ce957600093f1da697c48ec141be89441))
+
 ## 1.0.0 (2026-07-09)
 
 
