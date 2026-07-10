@@ -1,10 +1,23 @@
 # File Manager
 
+[![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Node.js](https://img.shields.io/badge/Node.js-24-5FA04E?logo=nodedotjs&logoColor=white)](https://nodejs.org/)
+[![Vue 3](https://img.shields.io/badge/Vue-3-4FC08D?logo=vuedotjs&logoColor=white)](https://vuejs.org/)
+[![Vite](https://img.shields.io/badge/Vite-646CFF?logo=vite&logoColor=white)](https://vite.dev/)
+[![Pinia](https://img.shields.io/badge/Pinia-FFD859?logo=vuedotjs&logoColor=black)](https://pinia.vuejs.org/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-06B6D4?logo=tailwindcss&logoColor=white)](https://tailwindcss.com/)
+[![Fastify](https://img.shields.io/badge/Fastify-000000?logo=fastify&logoColor=white)](https://fastify.dev/)
+[![Vitest](https://img.shields.io/badge/Vitest-6E9F18?logo=vitest&logoColor=white)](https://vitest.dev/)
+[![Playwright](https://img.shields.io/badge/Playwright-2EAD33?logo=playwright&logoColor=white)](https://playwright.dev/)
+[![pnpm](https://img.shields.io/badge/pnpm-F69220?logo=pnpm&logoColor=white)](https://pnpm.io/)
+[![Keycloak](https://img.shields.io/badge/Keycloak-4D4D4D?logo=keycloak&logoColor=white)](https://www.keycloak.org/)
+[![Docker Hub](https://img.shields.io/badge/Docker_Hub-pfeiffermax%2Ffile--manager-2496ED?logo=docker&logoColor=white)](https://hub.docker.com/r/pfeiffermax/file-manager)
+
 A self-hosted web frontend for managing files on disk. Browse, create, edit,
 upload, download, rename, move, delete, and work with zip archives — all from
 the browser. It runs as a single container and serves files from a directory
-you mount into it, making it a natural fit for Kubernetes with a persistent
-volume.
+you mount into it, making it a natural fit for Podman, Docker and Kubernetes
+with a persistent volume.
 
 ![file-manager screenshot](https://raw.githubusercontent.com/max-pfeiffer/file-manager/main/docs/screenshot.png)
 
